@@ -356,3 +356,43 @@ CREATE TABLE HostelAllotments (
         ON UPDATE NO ACTION
 );
 GO
+
+-- ============================================
+-- Table: ExamSchedule
+-- ============================================
+CREATE TABLE ExamSchedule (
+    ExamID INT PRIMARY KEY IDENTITY(1,1),
+    SectionID INT NOT NULL,
+    ExamType NVARCHAR(20) NOT NULL CHECK (ExamType IN ('Midterm', 'Final', 'Quiz', 'Assignment')),
+    ExamDate DATETIME NOT NULL,
+    DurationMinutes INT NOT NULL CHECK (DurationMinutes > 0),
+    RoomNumber NVARCHAR(20) NULL,
+    TotalMarks INT NOT NULL CHECK (TotalMarks > 0),
+    CONSTRAINT FK_ExamSchedule_Section FOREIGN KEY (SectionID)
+        REFERENCES Sections(SectionID)
+        ON DELETE NO ACTION
+        ON UPDATE NO ACTION
+);
+GO
+
+-- ============================================
+-- Table: Results
+-- ============================================
+CREATE TABLE Results (
+    ResultID INT PRIMARY KEY IDENTITY(1,1),
+    ExamID INT NOT NULL,
+    StudentID INT NOT NULL,
+    MarksObtained DECIMAL(6,2) NOT NULL CHECK (MarksObtained >= 0),
+    IsAbsent BIT DEFAULT 0,
+    PublishedDate DATETIME NULL,
+    CONSTRAINT FK_Results_Exam FOREIGN KEY (ExamID)
+        REFERENCES ExamSchedule(ExamID)
+        ON DELETE NO ACTION
+        ON UPDATE NO ACTION,
+    CONSTRAINT FK_Results_Student FOREIGN KEY (StudentID)
+        REFERENCES Students(StudentID)
+        ON DELETE NO ACTION
+        ON UPDATE NO ACTION,
+    CONSTRAINT UQ_Exam_Student UNIQUE (ExamID, StudentID)
+);
+GO
