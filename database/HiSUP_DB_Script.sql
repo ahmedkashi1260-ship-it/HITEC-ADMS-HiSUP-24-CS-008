@@ -161,3 +161,24 @@ CREATE TABLE Sections (
     CONSTRAINT CHK_SeatsNotExceeded CHECK (SeatsFilled <= MaxSeats)
 );
 GO
+
+-- ============================================
+-- Table: Enrollments
+-- ============================================
+CREATE TABLE Enrollments (
+    EnrollmentID INT PRIMARY KEY IDENTITY(1,1),
+    StudentID INT NOT NULL,
+    SectionID INT NOT NULL,
+    EnrollmentDate DATETIME DEFAULT GETDATE(),
+    Status NVARCHAR(20) NOT NULL DEFAULT 'Active' CHECK (Status IN ('Active', 'Dropped', 'Completed')),
+    CONSTRAINT FK_Enrollments_Student FOREIGN KEY (StudentID)
+        REFERENCES Students(StudentID)
+        ON DELETE NO ACTION
+        ON UPDATE NO ACTION,
+    CONSTRAINT FK_Enrollments_Section FOREIGN KEY (SectionID)
+        REFERENCES Sections(SectionID)
+        ON DELETE NO ACTION
+        ON UPDATE NO ACTION,
+    CONSTRAINT UQ_Student_Section UNIQUE (StudentID, SectionID)
+);
+GO
