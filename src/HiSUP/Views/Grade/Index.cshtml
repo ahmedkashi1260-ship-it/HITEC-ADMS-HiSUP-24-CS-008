@@ -1,0 +1,53 @@
+@model IEnumerable<HiSUP.Models.Grade>
+@{
+    ViewData["Title"] = "Grades";
+}
+
+<div class="page-header">
+    <div>
+        <h2><i class="fas fa-star me-2"></i>Student Grades</h2>
+        <p>View all published grades across the system</p>
+    </div>
+</div>
+
+<div class="table-card">
+    <div class="card-header">
+        <i class="fas fa-list me-2"></i>Grades List (@Model.Count() records)
+    </div>
+    <div class="table-responsive">
+        <table class="table table-hover mb-0">
+            <thead>
+                <tr>
+                    <th>Student</th>
+                    <th>Course</th>
+                    <th>Marks</th>
+                    <th>Letter Grade</th>
+                    <th>Grade Point</th>
+                    <th>Published</th>
+                    <th>Action</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var grade in Model)
+                {
+                    <tr>
+                        <td>@grade.Enrollment?.Student?.FirstName @grade.Enrollment?.Student?.LastName</td>
+                        <td>@grade.Enrollment?.Section?.Course?.CourseTitle</td>
+                        <td>@grade.MarksObtained</td>
+                        <td>
+                            <span class="badge bg-primary">@grade.LetterGrade</span>
+                        </td>
+                        <td>@grade.GradePoint</td>
+                        <td>@grade.PublishedDate?.ToString("dd-MMM-yyyy")</td>
+                        <td>
+                            <a href="/Grade/Transcript/@grade.Enrollment?.StudentID" 
+                               class="btn btn-sm btn-info text-white">
+                                <i class="fas fa-file-alt me-1"></i>Transcript
+                            </a>
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+</div>

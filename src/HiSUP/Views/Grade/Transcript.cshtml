@@ -1,0 +1,78 @@
+@model IEnumerable<dynamic>
+@{
+    ViewData["Title"] = "Transcript";
+    var student = ViewBag.Student as HiSUP.Models.Student;
+}
+
+<div class="page-header">
+    <div class="d-flex justify-content-between align-items-center">
+        <div>
+            <h2><i class="fas fa-file-alt me-2"></i>Academic Transcript</h2>
+            <p>@student?.FirstName @student?.LastName (@student?.RollNumber)</p>
+        </div>
+        <a href="/Grade" class="btn btn-light">
+            <i class="fas fa-arrow-left me-2"></i>Back to Grades
+        </a>
+    </div>
+</div>
+
+@if (TempData["Error"] != null)
+{
+    <div class="alert alert-danger alert-dismissible fade show" role="alert">
+        <i class="fas fa-exclamation-circle me-2"></i>@TempData["Error"]
+        <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+    </div>
+}
+
+<div class="table-card">
+    <div class="card-header">
+        <i class="fas fa-graduation-cap me-2"></i>Course History
+    </div>
+    <div class="table-responsive">
+        @if (Model.Any())
+        {
+            <table class="table table-hover mb-0">
+                <thead>
+                    <tr>
+                        <th>Course Code</th>
+                        <th>Course Title</th>
+                        <th>Credit Hrs</th>
+                        <th>Semester</th>
+                        <th>Year</th>
+                        <th>Grade</th>
+                        <th>Grade Point</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var row in Model)
+                    {
+                        <tr>
+                            <td><strong>@row.CourseCode</strong></td>
+                            <td>@row.CourseTitle</td>
+                            <td>@row.CreditHours</td>
+                            <td>@row.SemesterTerm</td>
+                            <td>@row.AcademicYear</td>
+                            <td>
+                                <span class="badge bg-primary">@row.LetterGrade</span>
+                            </td>
+                            <td>@row.GradePoint</td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        }
+        else
+        {
+            <div class="p-4 text-center text-muted">
+                <i class="fas fa-info-circle fa-3x mb-3"></i>
+                <p>No transcript records found for this student.</p>
+            </div>
+        }
+    </div>
+</div>
+
+<div class="alert alert-info mt-3">
+    <i class="fas fa-database me-2"></i>
+    <strong>Note:</strong> This page calls the <code>GenerateTranscript</code> stored procedure,
+    which uses a CTE to join Enrollments, Sections, Courses, and Grades.
+</div>
