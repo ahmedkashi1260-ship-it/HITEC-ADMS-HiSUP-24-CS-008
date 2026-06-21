@@ -110,3 +110,27 @@ CREATE TABLE Programs (
         ON UPDATE CASCADE
 );
 GO
+
+-- ============================================
+-- Table: Courses
+-- ============================================
+CREATE TABLE Courses (
+    CourseID INT PRIMARY KEY IDENTITY(1,1),
+    CourseCode NVARCHAR(15) NOT NULL UNIQUE,
+    CourseTitle NVARCHAR(150) NOT NULL,
+    ProgramID INT NOT NULL,
+    CreditHours INT CHECK (CreditHours > 0 AND CreditHours <= 6),
+    PrerequisiteCourseID INT NULL,
+    Semester INT CHECK (Semester BETWEEN 1 AND 8),
+    IsActive BIT DEFAULT 1,
+    CreatedAt DATETIME DEFAULT GETDATE(),
+    CONSTRAINT FK_Courses_Program FOREIGN KEY (ProgramID)
+        REFERENCES Programs(ProgramID)
+        ON DELETE NO ACTION
+        ON UPDATE CASCADE,
+    CONSTRAINT FK_Courses_Prerequisite FOREIGN KEY (PrerequisiteCourseID)
+        REFERENCES Courses(CourseID)
+        ON DELETE NO ACTION
+        ON UPDATE NO ACTION
+);
+GO
