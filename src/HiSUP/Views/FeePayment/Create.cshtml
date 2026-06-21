@@ -1,0 +1,87 @@
+@{
+    ViewData["Title"] = "Process Payment";
+}
+
+<div class="page-header">
+    <div class="d-flex justify-content-between align-items-center">
+        <div>
+            <h2><i class="fas fa-money-bill-wave me-2"></i>Process Fee Payment</h2>
+            <p>Record a new fee payment for a student</p>
+        </div>
+        <a href="/FeePayment" class="btn btn-light">
+            <i class="fas fa-arrow-left me-2"></i>Back to Payments
+        </a>
+    </div>
+</div>
+
+@if (TempData["Error"] != null)
+{
+    <div class="alert alert-danger alert-dismissible fade show" role="alert">
+        <i class="fas fa-exclamation-circle me-2"></i>@TempData["Error"]
+        <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+    </div>
+}
+
+<div class="row justify-content-center">
+    <div class="col-md-8">
+        <div class="table-card">
+            <div class="card-header">
+                <i class="fas fa-receipt me-2"></i>Payment Form
+            </div>
+            <div class="p-4">
+                <form asp-controller="FeePayment" asp-action="Create" method="post">
+                    @Html.AntiForgeryToken()
+                    <div class="row g-3">
+                        <div class="col-md-6">
+                            <label class="form-label fw-bold">
+                                <i class="fas fa-user-graduate me-1 text-primary"></i>Student
+                            </label>
+                            <select name="studentId" class="form-select" required>
+                                <option value="">-- Select Student --</option>
+                                @foreach (var student in ViewBag.Students)
+                                {
+                                    <option value="@student.StudentID">
+                                        @student.RollNumber - @student.FirstName @student.LastName
+                                    </option>
+                                }
+                            </select>
+                        </div>
+                        <div class="col-md-6">
+                            <label class="form-label fw-bold">
+                                <i class="fas fa-file-invoice me-1 text-primary"></i>Fee Structure ID
+                            </label>
+                            <input type="number" name="feeStructureId" class="form-control" 
+                                   placeholder="e.g. 1" required />
+                        </div>
+                        <div class="col-md-6">
+                            <label class="form-label fw-bold">
+                                <i class="fas fa-money-bill me-1 text-primary"></i>Amount Paid (Rs.)
+                            </label>
+                            <input type="number" step="0.01" name="amountPaid" class="form-control" 
+                                   placeholder="e.g. 53500" required />
+                        </div>
+                        <div class="col-md-6">
+                            <label class="form-label fw-bold">
+                                <i class="fas fa-credit-card me-1 text-primary"></i>Payment Method
+                            </label>
+                            <select name="paymentMethod" class="form-select" required>
+                                <option value="Cash">Cash</option>
+                                <option value="Bank Transfer">Bank Transfer</option>
+                                <option value="Online">Online</option>
+                                <option value="Cheque">Cheque</option>
+                            </select>
+                        </div>
+                        <div class="col-12 mt-4">
+                            <button type="submit" class="btn btn-primary btn-lg px-5">
+                                <i class="fas fa-check me-2"></i>Process Payment
+                            </button>
+                            <a href="/FeePayment" class="btn btn-outline-secondary btn-lg ms-2 px-5">
+                                <i class="fas fa-times me-2"></i>Cancel
+                            </a>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
