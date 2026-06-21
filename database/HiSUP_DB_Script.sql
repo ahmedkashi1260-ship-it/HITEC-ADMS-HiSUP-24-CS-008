@@ -396,3 +396,47 @@ CREATE TABLE Results (
     CONSTRAINT UQ_Exam_Student UNIQUE (ExamID, StudentID)
 );
 GO
+
+-- ============================================
+-- Table: UserAccounts
+-- ============================================
+CREATE TABLE UserAccounts (
+    UserID INT PRIMARY KEY IDENTITY(1,1),
+    Username NVARCHAR(50) NOT NULL UNIQUE,
+    PasswordHash NVARCHAR(255) NOT NULL,
+    Role NVARCHAR(20) NOT NULL CHECK (Role IN ('Student', 'Faculty', 'Admin', 'Finance')),
+    StudentID INT NULL,
+    FacultyID INT NULL,
+    LastLogin DATETIME NULL,
+    IsActive BIT DEFAULT 1,
+    CreatedAt DATETIME DEFAULT GETDATE(),
+    CONSTRAINT FK_UserAccounts_Student FOREIGN KEY (StudentID)
+        REFERENCES Students(StudentID)
+        ON DELETE NO ACTION
+        ON UPDATE NO ACTION,
+    CONSTRAINT FK_UserAccounts_Faculty FOREIGN KEY (FacultyID)
+        REFERENCES Faculty(FacultyID)
+        ON DELETE NO ACTION
+        ON UPDATE NO ACTION,
+    CONSTRAINT CHK_OneRoleLink CHECK (
+        (Role = 'Student' AND StudentID IS NOT NULL AND FacultyID IS NULL) OR
+        (Role = 'Faculty' AND FacultyID IS NOT NULL AND StudentID IS NULL) OR
+        (Role IN ('Admin', 'Finance') AND StudentID IS NULL AND FacultyID IS NULL)
+    )
+);
+GO
+
+-- ============================================
+-- Table: AuditLog
+-- ============================================
+CREATE TABLE AuditLog (
+    AuditID INT PRIMARY KEY IDENTITY(1,1),
+    TableName NVARCHAR(50) NOT NULL,
+    OperationType NVARCHAR(10) NOT NULL CHECK (OperationType IN ('INSERT', 'UPDATE', 'DELETE')),
+    RecordID INT NULL,
+    OldValue NVARCHAR(MAX) NULL,
+    NewValue NVARCHAR(MAX) NULL,
+    ChangedBy NVARCHAR(100) NOT NULL,
+    ChangedAt DATETIME DEFAULT GETDATE()
+);
+GO
