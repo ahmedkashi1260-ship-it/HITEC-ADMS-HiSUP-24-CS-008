@@ -231,3 +231,51 @@ CREATE TABLE AttendanceRecords (
     CONSTRAINT UQ_Student_Section_Date UNIQUE (StudentID, SectionID, AttendanceDate)
 );
 GO
+
+
+-- ============================================
+-- Table: FeeStructure
+-- ============================================
+CREATE TABLE FeeStructure (
+    FeeStructureID INT PRIMARY KEY IDENTITY(1,1),
+    ProgramID INT NOT NULL,
+    Semester INT CHECK (Semester BETWEEN 1 AND 8),
+    TuitionFee DECIMAL(10,2) NOT NULL CHECK (TuitionFee >= 0),
+    ExamFee DECIMAL(10,2) NOT NULL DEFAULT 0 CHECK (ExamFee >= 0),
+    LibraryFee DECIMAL(10,2) NOT NULL DEFAULT 0 CHECK (LibraryFee >= 0),
+    OtherCharges DECIMAL(10,2) NOT NULL DEFAULT 0 CHECK (OtherCharges >= 0),
+    TotalAmount AS (TuitionFee + ExamFee + LibraryFee + OtherCharges),
+    EffectiveYear INT NOT NULL,
+    CONSTRAINT FK_FeeStructure_Program FOREIGN KEY (ProgramID)
+        REFERENCES Programs(ProgramID)
+        ON DELETE NO ACTION
+        ON UPDATE NO ACTION
+);
+GO
+
+-- ============================================
+-- Table: FeePayments
+-- ============================================
+CREATE TABLE FeePayments (
+    PaymentID INT PRIMARY KEY IDENTITY(1,1),
+    StudentID INT NOT NULL,
+    FeeStructureID INT NOT NULL,
+    AmountPaid DECIMAL(10,2) NOT NULL CHECK (AmountPaid > 0),
+    PaymentDate DATETIME DEFAULT GETDATE(),
+    PaymentMethod NVARCHAR(30) CHECK (PaymentMethod IN ('Cash', 'Bank Transfer', 'Online', 'Cheque')),
+    TransactionReference NVARCHAR(50) NULL,
+    ProcessedBy INT NULL,
+    CONSTRAINT FK_FeePayments_Student FOREIGN KEY (StudentID)
+        REFERENCES Students(StudentID)
+        ON DELETE NO ACTION
+        ON UPDATE NO ACTION,
+    CONSTRAINT FK_FeePayments_FeeStructure FOREIGN KEY (FeeStructureID)
+        REFERENCES FeeStructure(FeeStructureID)
+        ON DELETE NO ACTION
+        ON UPDATE NO ACTION,
+    CONSTRAINT FK_FeePayments_Staff FOREIGN KEY (ProcessedBy)
+        REFERENCES Staff(StaffID)
+        ON DELETE NO ACTION
+        ON UPDATE NO ACTION
+);
+GO
