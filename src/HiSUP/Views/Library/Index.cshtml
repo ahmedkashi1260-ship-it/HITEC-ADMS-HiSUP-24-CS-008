@@ -1,0 +1,95 @@
+@model IEnumerable<HiSUP.Models.LibraryItem>
+@{
+    ViewData["Title"] = "Library";
+}
+
+<div class="page-header">
+    <div class="d-flex justify-content-between align-items-center">
+        <div>
+            <h2><i class="fas fa-book-open me-2"></i>Library Catalog</h2>
+            <p>Search and manage books, journals and other items</p>
+        </div>
+        <a href="/Library/Issue" class="btn btn-light btn-lg">
+            <i class="fas fa-hand-holding me-2"></i>Issue Book
+        </a>
+    </div>
+</div>
+
+@if (TempData["Success"] != null)
+{
+    <div class="alert alert-success alert-dismissible fade show" role="alert">
+        <i class="fas fa-check-circle me-2"></i>@TempData["Success"]
+        <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+    </div>
+}
+
+@if (TempData["Error"] != null)
+{
+    <div class="alert alert-danger alert-dismissible fade show" role="alert">
+        <i class="fas fa-exclamation-circle me-2"></i>@TempData["Error"]
+        <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+    </div>
+}
+
+<div class="table-card mb-3">
+    <div class="card-header">
+        <i class="fas fa-search me-2"></i>Search Catalog
+    </div>
+    <div class="p-3">
+        <form method="get" class="d-flex gap-2">
+            <input type="text" name="search" class="form-control" 
+                   placeholder="Search by title or author..." value="@ViewBag.Search" />
+            <button type="submit" class="btn btn-primary">
+                <i class="fas fa-search"></i> Search
+            </button>
+            <a href="/Library" class="btn btn-outline-secondary">Clear</a>
+        </form>
+    </div>
+</div>
+
+<div class="table-card">
+    <div class="card-header d-flex justify-content-between align-items-center">
+        <span><i class="fas fa-list me-2"></i>Items (@Model.Count() found)</span>
+        <a href="/Library/Overdue" class="btn btn-sm btn-warning text-white">
+            <i class="fas fa-clock me-1"></i>View Overdue
+        </a>
+    </div>
+    <div class="table-responsive">
+        <table class="table table-hover mb-0">
+            <thead>
+                <tr>
+                    <th>Title</th>
+                    <th>Author</th>
+                    <th>Type</th>
+                    <th>Total Copies</th>
+                    <th>Available</th>
+                    <th>Status</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var item in Model)
+                {
+                    <tr>
+                        <td><strong>@item.Title</strong></td>
+                        <td>@item.Author</td>
+                        <td>
+                            <span class="badge bg-secondary">@item.ItemType</span>
+                        </td>
+                        <td>@item.TotalCopies</td>
+                        <td>@item.CopiesAvailable</td>
+                        <td>
+                            @if (item.CopiesAvailable > 0)
+                            {
+                                <span class="badge-active">Available</span>
+                            }
+                            else
+                            {
+                                <span class="badge-inactive">All Issued</span>
+                            }
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+</div>

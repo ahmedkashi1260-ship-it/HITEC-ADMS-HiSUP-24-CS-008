@@ -1,0 +1,86 @@
+@model IEnumerable<HiSUP.Models.LibraryIssue>
+@{
+    ViewData["Title"] = "Overdue Books";
+}
+
+<div class="page-header" style="background: linear-gradient(135deg, #b71c1c, #ef5350);">
+    <div class="d-flex justify-content-between align-items-center">
+        <div>
+            <h2><i class="fas fa-exclamation-triangle me-2"></i>Overdue Books</h2>
+            <p>Books that are past their due date</p>
+        </div>
+        <a href="/Library" class="btn btn-light">
+            <i class="fas fa-arrow-left me-2"></i>Back to Catalog
+        </a>
+    </div>
+</div>
+
+@if (TempData["Success"] != null)
+{
+    <div class="alert alert-success alert-dismissible fade show" role="alert">
+        <i class="fas fa-check-circle me-2"></i>@TempData["Success"]
+        <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+    </div>
+}
+
+@if (TempData["Error"] != null)
+{
+    <div class="alert alert-danger alert-dismissible fade show" role="alert">
+        <i class="fas fa-exclamation-circle me-2"></i>@TempData["Error"]
+        <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+    </div>
+}
+
+<div class="table-card">
+    <div class="card-header" style="background: linear-gradient(135deg, #b71c1c, #ef5350);">
+        <i class="fas fa-clock me-2"></i>Overdue Items (@Model.Count() found)
+    </div>
+    <div class="table-responsive">
+        @if (Model.Any())
+        {
+            <table class="table table-hover mb-0">
+                <thead>
+                    <tr>
+                        <th>Student</th>
+                        <th>Book Title</th>
+                        <th>Issue Date</th>
+                        <th>Due Date</th>
+                        <th>Days Overdue</th>
+                        <th>Action</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var issue in Model)
+                    {
+                        var daysOverdue = (DateTime.Today - issue.DueDate).Days;
+                        <tr>
+                            <td>@issue.Student?.FirstName @issue.Student?.LastName</td>
+                            <td><strong>@issue.LibraryItem?.Title</strong></td>
+                            <td>@issue.IssueDate.ToString("dd-MMM-yyyy")</td>
+                            <td>@issue.DueDate.ToString("dd-MMM-yyyy")</td>
+                            <td>
+                                <span class="badge bg-danger">@daysOverdue days</span>
+                            </td>
+                            <td>
+                                <form asp-controller="Library" asp-action="Return" method="post" style="display:inline;">
+                                    @Html.AntiForgeryToken()
+                                    <input type="hidden" name="issueId" value="@issue.IssueID" />
+                                    <button type="submit" class="btn btn-sm btn-success">
+                                        <i class="fas fa-undo me-1"></i>Return
+                                    </button>
+                                </form>
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        }
+        else
+        {
+            <div class="p-4 text-center text-muted">
+                <i class="fas fa-check-circle fa-3x mb-3 text-success"></i>
+                <p>No overdue books right now!</p>
+            </div>
+        }
+    </div>
+</div>

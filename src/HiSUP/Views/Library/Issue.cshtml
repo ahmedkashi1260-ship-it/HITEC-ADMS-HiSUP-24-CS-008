@@ -1,0 +1,83 @@
+@{
+    ViewData["Title"] = "Issue Book";
+}
+
+<div class="page-header">
+    <div class="d-flex justify-content-between align-items-center">
+        <div>
+            <h2><i class="fas fa-hand-holding me-2"></i>Issue Library Book</h2>
+            <p>Issue a book or journal to a student</p>
+        </div>
+        <a href="/Library" class="btn btn-light">
+            <i class="fas fa-arrow-left me-2"></i>Back to Catalog
+        </a>
+    </div>
+</div>
+
+@if (TempData["Error"] != null)
+{
+    <div class="alert alert-danger alert-dismissible fade show" role="alert">
+        <i class="fas fa-exclamation-circle me-2"></i>@TempData["Error"]
+        <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+    </div>
+}
+
+<div class="row justify-content-center">
+    <div class="col-md-8">
+        <div class="table-card">
+            <div class="card-header">
+                <i class="fas fa-book me-2"></i>Issue Form
+            </div>
+            <div class="p-4">
+                <form asp-controller="Library" asp-action="Issue" method="post">
+                    @Html.AntiForgeryToken()
+                    <div class="row g-3">
+                        <div class="col-md-6">
+                            <label class="form-label fw-bold">
+                                <i class="fas fa-user-graduate me-1 text-primary"></i>Student
+                            </label>
+                            <select name="studentId" class="form-select" required>
+                                <option value="">-- Select Student --</option>
+                                @foreach (var student in ViewBag.Students)
+                                {
+                                    <option value="@student.StudentID">
+                                        @student.RollNumber - @student.FirstName @student.LastName
+                                    </option>
+                                }
+                            </select>
+                        </div>
+                        <div class="col-md-6">
+                            <label class="form-label fw-bold">
+                                <i class="fas fa-book me-1 text-primary"></i>Book / Item
+                            </label>
+                            <select name="itemId" class="form-select" required>
+                                <option value="">-- Select Item --</option>
+                                @foreach (var item in ViewBag.Items)
+                                {
+                                    <option value="@item.ItemID">
+                                        @item.Title (@item.CopiesAvailable available)
+                                    </option>
+                                }
+                            </select>
+                        </div>
+                        <div class="col-md-6">
+                            <label class="form-label fw-bold">
+                                <i class="fas fa-calendar me-1 text-primary"></i>Due Date
+                            </label>
+                            <input type="date" name="dueDate" class="form-control"
+                                   value="@DateTime.Today.AddDays(14).ToString("yyyy-MM-dd")" required />
+                        </div>
+                        <div class="col-12 mt-4">
+                            <button type="submit" class="btn btn-primary btn-lg px-5">
+                                <i class="fas fa-check me-2"></i>Issue Book
+                            </button>
+                            <a href="/Library" class="btn btn-outline-secondary btn-lg ms-2 px-5">
+                                <i class="fas fa-times me-2"></i>Cancel
+                            </a>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
