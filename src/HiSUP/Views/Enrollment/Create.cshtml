@@ -1,0 +1,76 @@
+@{
+    ViewData["Title"] = "New Enrollment";
+}
+
+<div class="page-header">
+    <div class="d-flex justify-content-between align-items-center">
+        <div>
+            <h2><i class="fas fa-clipboard-list me-2"></i>New Enrollment</h2>
+            <p>Enroll a student into a course section</p>
+        </div>
+        <a href="/Enrollment" class="btn btn-light">
+            <i class="fas fa-arrow-left me-2"></i>Back to Enrollments
+        </a>
+    </div>
+</div>
+
+@if (TempData["Error"] != null)
+{
+    <div class="alert alert-danger alert-dismissible fade show" role="alert">
+        <i class="fas fa-exclamation-circle me-2"></i>@TempData["Error"]
+        <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+    </div>
+}
+
+<div class="row justify-content-center">
+    <div class="col-md-8">
+        <div class="table-card">
+            <div class="card-header">
+                <i class="fas fa-user-plus me-2"></i>Enrollment Form
+            </div>
+            <div class="p-4">
+                <form asp-controller="Enrollment" asp-action="Create" method="post">
+                    @Html.AntiForgeryToken()
+                    <div class="row g-3">
+                        <div class="col-md-6">
+                            <label class="form-label fw-bold">
+                                <i class="fas fa-user-graduate me-1 text-primary"></i>Student
+                            </label>
+                            <select name="studentId" class="form-select" required>
+                                <option value="">-- Select Student --</option>
+                                @foreach (var student in ViewBag.Students)
+                                {
+                                    <option value="@student.StudentID">
+                                        @student.RollNumber - @student.FirstName @student.LastName
+                                    </option>
+                                }
+                            </select>
+                        </div>
+                        <div class="col-md-6">
+                            <label class="form-label fw-bold">
+                                <i class="fas fa-chalkboard me-1 text-primary"></i>Section
+                            </label>
+                            <select name="sectionId" class="form-select" required>
+                                <option value="">-- Select Section --</option>
+                                @foreach (var sec in ViewBag.Sections)
+                                {
+                                    <option value="@sec.SectionID">
+                                        @sec.Course?.CourseTitle - @sec.SectionName (@sec.SeatsFilled/@sec.MaxSeats seats)
+                                    </option>
+                                }
+                            </select>
+                        </div>
+                        <div class="col-12 mt-4">
+                            <button type="submit" class="btn btn-primary btn-lg px-5">
+                                <i class="fas fa-check me-2"></i>Enroll Student
+                            </button>
+                            <a href="/Enrollment" class="btn btn-outline-secondary btn-lg ms-2 px-5">
+                                <i class="fas fa-times me-2"></i>Cancel
+                            </a>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
