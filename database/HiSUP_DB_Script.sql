@@ -46,3 +46,25 @@ CREATE TABLE Students (
         ON UPDATE CASCADE
 );
 GO
+
+-- ============================================
+-- Table: Faculty
+-- ============================================
+CREATE TABLE Faculty (
+    FacultyID INT PRIMARY KEY IDENTITY(1,1),
+    EmployeeCode NVARCHAR(20) NOT NULL UNIQUE,
+    FirstName NVARCHAR(50) NOT NULL,
+    LastName NVARCHAR(50) NOT NULL,
+    Email NVARCHAR(100) NOT NULL UNIQUE,
+    Phone NVARCHAR(20) NULL,
+    Designation NVARCHAR(50) CHECK (Designation IN ('Lecturer', 'Assistant Professor', 'Associate Professor', 'Professor')),
+    DepartmentID INT NOT NULL,
+    HireDate DATE NOT NULL,
+    IsActive BIT DEFAULT 1,
+    CreatedAt DATETIME DEFAULT GETDATE(),
+    CONSTRAINT FK_Faculty_Department FOREIGN KEY (DepartmentID)
+        REFERENCES Departments(DepartmentID)
+        ON DELETE NO ACTION
+        ON UPDATE CASCADE
+);
+GO
