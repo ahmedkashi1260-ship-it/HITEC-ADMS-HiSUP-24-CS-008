@@ -7,9 +7,9 @@
 (https://hitec-adms-hisup-22-cs-095-production.up.railway.app)
 
 ## Team
-| Name | Roll No | Contribution |
-|------|---------|---------------|
-| Kashif Ahmad| 22-CS-095 | Solo project |
+|Roll No | Contribution |
+---------|---------------|
+|24-CS-008 | 4 Members (24-CS-009, 24-CS-159, 24-CS-113) |
 
 ## Stack
 ASP.NET Core 8 | SQL Server 2019 | Entity Framework Core 8 | Bootstrap 5
