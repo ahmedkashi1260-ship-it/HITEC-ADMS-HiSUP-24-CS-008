@@ -68,3 +68,25 @@ CREATE TABLE Faculty (
         ON UPDATE CASCADE
 );
 GO
+
+-- ============================================
+-- Table: Staff
+-- ============================================
+CREATE TABLE Staff (
+    StaffID INT PRIMARY KEY IDENTITY(1,1),
+    EmployeeCode NVARCHAR(20) NOT NULL UNIQUE,
+    FirstName NVARCHAR(50) NOT NULL,
+    LastName NVARCHAR(50) NOT NULL,
+    Email NVARCHAR(100) NOT NULL UNIQUE,
+    Phone NVARCHAR(20) NULL,
+    JobRole NVARCHAR(50) NOT NULL,
+    DepartmentID INT NULL,
+    HireDate DATE NOT NULL,
+    IsActive BIT DEFAULT 1,
+    CreatedAt DATETIME DEFAULT GETDATE(),
+    CONSTRAINT FK_Staff_Department FOREIGN KEY (DepartmentID)
+        REFERENCES Departments(DepartmentID)
+        ON DELETE NO ACTION
+        ON UPDATE CASCADE
+);
+GO
