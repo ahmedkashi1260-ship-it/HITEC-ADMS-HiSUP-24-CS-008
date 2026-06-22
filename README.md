@@ -9,7 +9,7 @@
 ## Team
 |Roll No | Contribution |
 ---------|---------------|
-|24-CS-008 | 4 Members (24-CS-009, 24-CS-159, 24-CS-113) |
+|24-CS-113 | 4 Members (24-CS-009, 24-CS-159, 24-CS-113) |
 
 ## Stack
 ASP.NET Core 8 | SQL Server 2019 | Entity Framework Core 8 | Bootstrap 5
@@ -20,10 +20,10 @@ ASP.NET Core 8 | SQL Server 2019 | Entity Framework Core 8 | Bootstrap 5
 3. `cd src/HiSUP && dotnet ef database update && dotnet run`
 
 ## ADMS Concepts
-Coming soon
+Done
 
 ## ER Diagram
-Coming soon
+Completed
 
 ## AI Tools Used
 See `docs/ai_usage_log.md`
